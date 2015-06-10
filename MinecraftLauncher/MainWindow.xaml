@@ -1,0 +1,184 @@
+﻿<metro:MetroWindow
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+        xmlns:ViewModel="clr-namespace:MinecraftLauncher.ViewModel" 
+        xmlns:Other="clr-namespace:MinecraftLauncher.Other"
+        xmlns:local="clr-namespace:MinecraftLauncher"
+        x:Class="MinecraftLauncher.MainWindow"
+        Title="Warzone Minecraft" Height="600" Width="1000" GlowBrush="{DynamicResource AccentColorBrush}" DataContext="{Binding Main, Source={StaticResource Locator}}" WindowStartupLocation="CenterScreen">
+
+    <metro:MetroWindow.Resources>
+        <Other:BooleanToVisibilityConverter x:Key="BoolToVisInverted" True="Collapsed" False="Visible" />
+        <Other:BooleanToVisibilityConverter x:Key="BoolToVis" True="Visible" False="Collapsed" />
+        <Other:EnumToFriendlyNameConverter x:Key="EnumToString" />
+        
+        <Style x:Key="MetroCircleAccentedButtonStyle"
+           TargetType="{x:Type Button}">
+            <Setter Property="FocusVisualStyle"
+                Value="{StaticResource MetroCircleButtonFocusVisual}" />
+            <Setter Property="Background"
+                Value="Transparent" />
+            <Setter Property="BorderThickness"
+                Value="2" />
+            <Setter Property="HorizontalContentAlignment"
+                Value="Center" />
+            <Setter Property="Foreground"
+                Value="{DynamicResource BlackBrush}" />
+            <Setter Property="VerticalContentAlignment"
+                Value="Center" />
+            <Setter Property="Padding"
+                Value="1" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Grid>
+                            <Ellipse Fill="{TemplateBinding Background}"
+                                 Margin="4"
+                                 StrokeThickness="0" />
+                            <Ellipse x:Name="ellipsebg"
+                                 Fill="{DynamicResource AccentColorBrush}"
+                                 Opacity="0"
+                                 Margin="4"
+                                 StrokeThickness="0" />
+                            <Ellipse x:Name="ellipse"
+                                 Margin="4"
+                                 Stroke="#ADADAD"
+                                 StrokeThickness="{Binding RelativeSource={x:Static RelativeSource.TemplatedParent}, Path=BorderThickness.Left}" />
+                            <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                          Margin="{TemplateBinding Padding}"
+                                          RecognizesAccessKey="True"
+                                          SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                          VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsPressed"
+                                 Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ellipsebg"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         From="0"
+                                                         To="1"
+                                                         Duration="0:0:0.1" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <!-- some out fading -->
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimation Storyboard.TargetName="ellipsebg"
+                                                         Storyboard.TargetProperty="Opacity"
+                                                         To="0"
+                                                         Duration="0:0:0.3" />
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                                <Setter Property="Foreground"
+                                    Value="{DynamicResource IdealForegroundColorBrush}" />
+                                <Setter TargetName="ellipse"
+                                    Property="Stroke"
+                                    Value="{DynamicResource AccentColorBrush}" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver"
+                                 Value="True">
+                                <Setter TargetName="ellipse"
+                                    Property="Opacity"
+                                    Value="1" />
+                            </Trigger>
+                            <Trigger Property="IsMouseOver"
+                                 Value="False">
+                                <Setter TargetName="ellipse"
+                                    Property="Opacity"
+                                    Value=".5" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled"
+                                 Value="False">
+                                <Setter Property="Foreground"
+                                    Value="{DynamicResource GrayBrush7}" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </metro:MetroWindow.Resources>
+
+    <metro:MetroWindow.InputBindings>
+        <KeyBinding Command="{Binding OpenSettings}" Key="P" Modifiers="Control" />
+    </metro:MetroWindow.InputBindings>
+
+    <metro:MetroWindow.RightWindowCommands>
+        <metro:WindowCommands>
+            <StackPanel Orientation="Horizontal" Visibility="{Binding Authorization.IsLoggedIn, Converter={StaticResource BoolToVis}}">
+                <ToggleButton Content="{Binding Authorization.CurrentAccount.Username}" IsChecked="True" IsEnabled="False" />
+                <Button IsEnabled="{Binding Authorization.IsLoggedIn}" Content="выйти" Command="{Binding Logout}" />
+            </StackPanel>
+            <Button Content="войти" Command="{Binding Login}"
+                    Visibility="{Binding Authorization.IsLoggedIn, Converter={StaticResource BoolToVisInverted}}" />
+            <ToggleButton IsChecked="{Binding IsSettingsOpen}">
+                <ToggleButton.Content>
+                    <Rectangle Width="16" Height="16" 
+                               Fill="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ToggleButton}}, 
+                        Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Visual="{DynamicResource appbar_cog}" Stretch="Uniform" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </ToggleButton.Content>
+            </ToggleButton>
+        </metro:WindowCommands>
+    </metro:MetroWindow.RightWindowCommands>
+
+    <metro:MetroWindow.Flyouts>
+        <metro:FlyoutsControl>
+            <metro:Flyout x:Name="Settings" Theme="Adapt" AnimateOpacity="True" Position="Right" IsOpen="{Binding IsSettingsOpen}">
+                <StackPanel Orientation="Vertical" Width="300">
+                    <TextBlock Margin="10" Text="Путь установки игры" />
+                    <TextBox Text="{Binding GameSettingsService.GameFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Top"  />
+                    <TextBlock Margin="10" Text="Доп. аргументы запуска" />
+                    <TextBox Text="{Binding GameSettingsService.Arguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Top"  />
+                    <Button Margin="10" Content="Сохранить" Command="{Binding SaveSettings}" Style="{DynamicResource MetroFlatButton}" />
+                </StackPanel>
+            </metro:Flyout>
+        </metro:FlyoutsControl>
+    </metro:MetroWindow.Flyouts>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="1.5*" />
+        </Grid.RowDefinitions>
+        <metro:MetroAnimatedSingleRowTabControl>
+            <metro:MetroTabItem Header="Игра">
+                
+            </metro:MetroTabItem>
+            <metro:MetroTabItem Header="Новости">
+                <local:NewsControl />
+            </metro:MetroTabItem>
+            <metro:MetroTabItem Header="Скин">
+                <local:SkinControl />
+            </metro:MetroTabItem>
+        </metro:MetroAnimatedSingleRowTabControl>
+        
+        <Grid Grid.Row="1" MinHeight="74">
+
+            <StackPanel HorizontalAlignment="Right" Margin="0,0,42,10" VerticalAlignment="Bottom" Height="54">
+                <Button IsEnabled="{Binding GameService.IsActionEnabled}" Command="{Binding Play}"  Width="40" Height="40" Style="{StaticResource MetroCircleAccentedButtonStyle}">
+                    <Rectangle Width="15" Height="15" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_control_play}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+
+                </Button>
+                <TextBlock Text="{Binding GameService.CurrentState, Converter={StaticResource EnumToString}}" />
+            </StackPanel>
+            <metro:MetroProgressBar Value="{Binding GameService.Progress}" VerticalAlignment="Bottom" Height="6" IsIndeterminate="{Binding GameService.IsIntermidiate}" Foreground="{DynamicResource AccentColorBrush}"/>
+        </Grid>
+
+
+    </Grid>
+</metro:MetroWindow>
