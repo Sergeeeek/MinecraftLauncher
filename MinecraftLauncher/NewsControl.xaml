@@ -33,7 +33,7 @@
                     <DataTemplate>
                         <DockPanel MaxWidth="600" Style="{StaticResource AppearStyle}">
                             <TextBlock Text="{Binding Title}" DockPanel.Dock="Top" FontSize="18" Foreground="{DynamicResource AccentColorBrush}" />
-                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" DockPanel.Dock="Bottom" />
+                            <TextBlock Text="{Binding Description}" TextWrapping="Wrap" DockPanel.Dock="Bottom" Margin="0,0,0,10" />
                         </DockPanel>
                     </DataTemplate>
                 </ItemsControl.ItemTemplate>

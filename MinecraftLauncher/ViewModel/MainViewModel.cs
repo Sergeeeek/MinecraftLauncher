@@ -7,6 +7,7 @@ using MinecraftLauncher.Model;
 using MinecraftLauncher.Model.Minecraft;
 using MinecraftLauncher.Services;
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,6 +16,7 @@ using System.Runtime.Serialization.Formatters.Binary;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using MinecraftLauncher.Services.Minecraft;
 
 namespace MinecraftLauncher.ViewModel
 {
@@ -46,26 +48,50 @@ namespace MinecraftLauncher.ViewModel
             }
         }
 
-
-        IGameService _GameService;
-        public IGameService GameService
+        bool _IsSettingsChanged;
+        public bool IsSettingsChanged
         {
-            get { return _GameService; }
-            private set
+            get { return _IsSettingsChanged; }
+            set
             {
-                _GameService = value;
-                RaisePropertyChanged("GameService");
+                _IsSettingsChanged = value;
+                RaisePropertyChanged("IsSettingsChanged");
             }
         }
 
-        IGameSettingsService _GameSettingsService;
-        public IGameSettingsService GameSettingsService
+        string _SettingsGameFolder;
+        public string SettingsGameFolder
         {
-            get { return _GameSettingsService; }
+            get { return _SettingsGameFolder; }
+            set
+            {
+                _SettingsGameFolder = value;
+                IsSettingsChanged = true;
+                RaisePropertyChanged("SettingsGameFolder");
+            }
+        }
+
+        string _SettingsLaunchArguments;
+        public string SettingsLaunchArguments
+        {
+            get { return _SettingsLaunchArguments; }
+            set
+            {
+                _SettingsLaunchArguments = value;
+                IsSettingsChanged = true;
+                RaisePropertyChanged("SettingsLaunchArguments");
+            }
+        }
+
+
+        IGameInstaller _GameInstallerService;
+        public IGameInstaller GameInstallerService
+        {
+            get { return _GameInstallerService; }
             private set
             {
-                _GameSettingsService = value;
-                RaisePropertyChanged("SettingsService");
+                _GameInstallerService = value;
+                RaisePropertyChanged("GameInstallerService");
             }
         }
 
@@ -100,10 +126,11 @@ namespace MinecraftLauncher.ViewModel
         /// </summary>
         public MainViewModel()
         {
-            GameService = ServiceLocator.Current.GetInstance<IGameService>();
-            GameSettingsService = ServiceLocator.Current.GetInstance<IGameSettingsService>();
+            GameInstallerService = ServiceLocator.Current.GetInstance<IGameInstaller>();
             Authorization = ServiceLocator.Current.GetInstance<IAuthorizationService>();
-            
+
+            var instances = ServiceLocator.Current.GetAllInstances<ISaveable>().ToList();
+
             Init();
 
             Login = new RelayCommand(async () =>
@@ -135,16 +162,16 @@ namespace MinecraftLauncher.ViewModel
 
             Play = new RelayCommand(() =>
             {
-                GameService.Action();
+                
             });
 
             SaveSettings = new RelayCommand(async () =>
             {
+                IsSettingsChanged = false;
+                var set = ServiceLocator.Current.GetInstance<ISettingsService>();
 
-                await GameService.ChangeFolder(GameSettingsService.GameFolder);
-
-                if(GameSettingsService is ISaveable)
-                    await (GameSettingsService as ISaveable).Save();
+                await set.Save();
+                //await GameInstallerService.MoveToFolder(GameInstallerService.InstallFolder);
             });
         }
 
@@ -180,8 +207,7 @@ namespace MinecraftLauncher.ViewModel
 
             var set = ServiceLocator.Current.GetInstance<ISettingsService>();
 
-            var task = Task.Run(() => set.Save());
-            task.Wait();
+            set.Save().Wait();
         }
 
         

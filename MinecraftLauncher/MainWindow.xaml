@@ -137,23 +137,19 @@
             <metro:Flyout x:Name="Settings" Theme="Adapt" AnimateOpacity="True" Position="Right" IsOpen="{Binding IsSettingsOpen}">
                 <StackPanel Orientation="Vertical" Width="300">
                     <TextBlock Margin="10" Text="Путь установки игры" />
-                    <TextBox Text="{Binding GameSettingsService.GameFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Top"  />
+                    <TextBox Text="{Binding GameInstallerService.InstallFolder, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Top"  />
                     <TextBlock Margin="10" Text="Доп. аргументы запуска" />
-                    <TextBox Text="{Binding GameSettingsService.Arguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Top"  />
-                    <Button Margin="10" Content="Сохранить" Command="{Binding SaveSettings}" Style="{DynamicResource MetroFlatButton}" />
+                    <TextBox Text="{Binding SettingsLaunchArguments, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="10" VerticalAlignment="Top"  />
+                    <Button Margin="10" IsEnabled="{Binding IsSettingsChanged}" Content="Сохранить" Command="{Binding SaveSettings}" Style="{DynamicResource MetroFlatButton}" />
                 </StackPanel>
             </metro:Flyout>
         </metro:FlyoutsControl>
     </metro:MetroWindow.Flyouts>
 
     <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="10*" />
-            <RowDefinition Height="1.5*" />
-        </Grid.RowDefinitions>
         <metro:MetroAnimatedSingleRowTabControl>
             <metro:MetroTabItem Header="Игра">
-                
+                <local:GameControl />
             </metro:MetroTabItem>
             <metro:MetroTabItem Header="Новости">
                 <local:NewsControl />
@@ -162,23 +158,5 @@
                 <local:SkinControl />
             </metro:MetroTabItem>
         </metro:MetroAnimatedSingleRowTabControl>
-        
-        <Grid Grid.Row="1" MinHeight="74">
-
-            <StackPanel HorizontalAlignment="Right" Margin="0,0,42,10" VerticalAlignment="Bottom" Height="54">
-                <Button IsEnabled="{Binding GameService.IsActionEnabled}" Command="{Binding Play}"  Width="40" Height="40" Style="{StaticResource MetroCircleAccentedButtonStyle}">
-                    <Rectangle Width="15" Height="15" Fill="{Binding Foreground, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Button}}}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Uniform" Visual="{DynamicResource appbar_control_play}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-
-                </Button>
-                <TextBlock Text="{Binding GameService.CurrentState, Converter={StaticResource EnumToString}}" />
-            </StackPanel>
-            <metro:MetroProgressBar Value="{Binding GameService.Progress}" VerticalAlignment="Bottom" Height="6" IsIndeterminate="{Binding GameService.IsIntermidiate}" Foreground="{DynamicResource AccentColorBrush}"/>
-        </Grid>
-
-
     </Grid>
 </metro:MetroWindow>

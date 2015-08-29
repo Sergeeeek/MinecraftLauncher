@@ -46,6 +46,9 @@
     <Reference Include="HtmlAgilityPack">
       <HintPath>..\packages\HtmlAgilityPack.1.4.8\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="log4net">
+      <HintPath>..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>..\packages\CommonServiceLocator.1.2\lib\portable-windows8+net40+sl5+windowsphone8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
@@ -64,6 +67,12 @@
     <Reference Include="System.Xaml">
       <RequiredTargetFramework>4.0</RequiredTargetFramework>
     </Reference>
+    <Reference Include="this.Log">
+      <HintPath>..\packages\this.Log.0.0.3.0\lib\net40\this.Log.dll</HintPath>
+    </Reference>
+    <Reference Include="this.Log-log4net">
+      <HintPath>..\packages\this.Log-log4net.0.0.3.0\lib\net40\this.Log-log4net.dll</HintPath>
+    </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
@@ -77,8 +86,9 @@
     <Compile Include="GameControl.xaml.cs">
       <DependentUpon>GameControl.xaml</DependentUpon>
     </Compile>
+    <Compile Include="LogExtensions.cs" />
     <Compile Include="Model\Minecraft\Account.cs" />
-    <Compile Include="Model\GameState.cs" />
+    <Compile Include="Model\InstallState.cs" />
     <Compile Include="Model\Minecraft\MinecraftNews.cs" />
     <Compile Include="Model\Minecraft\SavedGameSettings.cs" />
     <Compile Include="NewsControl.xaml.cs">
@@ -86,16 +96,14 @@
     </Compile>
     <Compile Include="Other\Converters.cs" />
     <Compile Include="Services\Interfaces\IDialogService.cs" />
-    <Compile Include="Services\Interfaces\IGameService.cs" />
+    <Compile Include="Services\Interfaces\IGameInstaller.cs" />
     <Compile Include="Services\Interfaces\IAuthorizationService.cs" />
     <Compile Include="Services\Interfaces\ISaveable.cs" />
     <Compile Include="Services\DialogService.cs" />
     <Compile Include="Services\Interfaces\ISettingsService.cs" />
     <Compile Include="Services\Minecraft\AuthorizationService.cs" />
-    <Compile Include="Services\Minecraft\GameService.cs" />
-    <Compile Include="Services\Interfaces\IGameSettingsService.cs" />
-    <Compile Include="Services\GameSettingsService.cs" />
-    <Compile Include="Services\SettingsService.cs" />
+    <Compile Include="Services\Minecraft\MinecraftGameInstaller.cs" />
+    <Compile Include="Services\BinarySettingsService.cs" />
     <Compile Include="SkinControl.xaml.cs">
       <DependentUpon>SkinControl.xaml</DependentUpon>
     </Compile>

@@ -40,18 +40,18 @@ namespace MinecraftLauncher.ViewModel
                 //SimpleIoc.Default.Register<IDataService, DesignDataService>();
                 SimpleIoc.Default.Register<IDialogService, DialogService>();
                 SimpleIoc.Default.Register<IAuthorizationService, AuthorizationService>();
-                SimpleIoc.Default.Register<IGameService, GameService>();
-                SimpleIoc.Default.Register<IGameSettingsService, GameSettingsService>();
-                SimpleIoc.Default.Register<ISettingsService, SettingsService>();
+                SimpleIoc.Default.Register<IGameInstaller, MinecraftGameInstaller>();
+                //SimpleIoc.Default.Register<IGameSettingsService, GameSettingsService>();
+                SimpleIoc.Default.Register<ISettingsService, BinarySettingsService>();
             }
             else
             {
                 // Create run time view services and models
                 SimpleIoc.Default.Register<IDialogService, DialogService>();
                 SimpleIoc.Default.Register<IAuthorizationService, AuthorizationService>();
-                SimpleIoc.Default.Register<IGameService, GameService>();
-                SimpleIoc.Default.Register<IGameSettingsService, GameSettingsService>();
-                SimpleIoc.Default.Register<ISettingsService, SettingsService>();
+                SimpleIoc.Default.Register<IGameInstaller, MinecraftGameInstaller>();
+                //SimpleIoc.Default.Register<IGameSettingsService, GameSettingsService>();
+                SimpleIoc.Default.Register<ISettingsService, BinarySettingsService>();
             }
 
             SimpleIoc.Default.Register<MainViewModel>();
